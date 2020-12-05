@@ -19,7 +19,13 @@
 		<input type="submit" value="Submit">
 	</form><br>
 	<form action="/get">
-		Fan Mode: <input type="text" name="input3">
+		<label for="fanSpeed">Fan Speed:</label>
+		<select name="input3" id="cars" form="carform">
+		  <option value="AUTO">Auto</option>
+		  <option value="HIGH">High</option>
+		  <option value="MEDIUM">Medium</option>
+		  <option value="HIGH">Low</option>
+		</select>
 		<input type="submit" value="Submit">
 	</form>
 </body>

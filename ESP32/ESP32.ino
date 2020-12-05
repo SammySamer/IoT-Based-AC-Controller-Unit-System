@@ -21,8 +21,9 @@ AsyncWebServer server(80);
 
 String processor(const String& var){
   //Serial.println(var);
-  //Serial2.flush();
-  if(Serial2.readString() != "")
+  Serial2.flush();
+  return (Serial2.readString());
+  if(Serial2.readString() != "" && Serial2.readString().length() == 9)
   {
     temp = Serial2.readString();
     return (Serial2.readString());
@@ -34,7 +35,7 @@ String processor(const String& var){
 void setup() {
   // Note the format for setting a serial port is as follows: Serial2.begin(baud-rate, protocol, RX pin, TX pin);
   Serial.begin(38400);
-  //Serial1.begin(9600, SERIAL_8N1, RXD2, TXD2);
+  //Serial1.begin(38400, SERIAL_8N1, RXD, TXD);
   Serial2.begin(38400, SERIAL_8N1, RXD2, TXD2);
   //Serial.println("Serial Txd is on pin: "+String(TX));
   //Serial.println("Serial Rxd is on pin: "+String(RX));
@@ -70,10 +71,13 @@ void setup() {
     request->send(SPIFFS, "/index.html", String(), false, processor);
     String inputMessage;
     String inputParam;
+    char tempMsg[4];
     // GET input1 value on <ESP_IP>/get?input1=<inputMessage>
     if (request->hasParam(PARAM_INPUT_1)) {
       inputMessage = request->getParam(PARAM_INPUT_1)->value();
       inputParam = PARAM_INPUT_1;
+      inputMessage.toCharArray(tempMsg, 4);
+      Serial2.write(tempMsg);
     }
     // GET input2 value on <ESP_IP>/get?input2=<inputMessage>
     else if (request->hasParam(PARAM_INPUT_2)) {
@@ -90,7 +94,6 @@ void setup() {
       inputParam = "none";
     }
     Serial.println(inputMessage);
-    //Serial2.write("SET TEMP: "+inputParam);
     //request->send(200, "text/html", "HTTP GET request sent to your ESP on input field (" 
     //                                 + inputParam + ") with value: " + inputMessage +
     //                                 "<br><a href=\"/\">Return to Home Page</a>");
@@ -99,6 +102,4 @@ void setup() {
 }
 
 void loop() {
-  Serial.println(Serial2.readString());
-  processor("");
 }

@@ -44,6 +44,8 @@ I2C_HandleTypeDef hi2c1;
 
 UART_HandleTypeDef huart2;
 
+uint8_t UART2_rxBuffer[12] = {0};
+
 /* USER CODE BEGIN PV */
 
 /* USER CODE END PV */
@@ -122,6 +124,8 @@ int main(void)
         
         
         HAL_UART_Transmit(&huart2, out, sizeof(out), 10);
+				HAL_UART_Receive (&huart2, UART2_rxBuffer, 12, 5000);
+				HAL_UART_Transmit (&huart2, UART2_rxBuffer, 12, 100);
         HAL_Delay(1000);
     }
   /* USER CODE END 2 */

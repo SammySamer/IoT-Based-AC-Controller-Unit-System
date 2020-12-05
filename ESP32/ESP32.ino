@@ -13,10 +13,9 @@ AsyncWebServer server(80);
 
 String processor(const String& var){
   Serial.println(var);
-  if(var == "STATE"){
-    Serial2.flush();
-    return (Serial2.readString());
-  }
+  Serial2.flush();
+  return (Serial2.readString());
+  
   return String();
 }
 
@@ -25,8 +24,8 @@ void setup() {
   Serial.begin(38400);
   //Serial1.begin(9600, SERIAL_8N1, RXD2, TXD2);
   Serial2.begin(38400, SERIAL_8N1, RXD2, TXD2);
-  Serial.println("Serial Txd is on pin: "+String(TX));
-  Serial.println("Serial Rxd is on pin: "+String(RX));
+  //Serial.println("Serial Txd is on pin: "+String(TX));
+  //Serial.println("Serial Rxd is on pin: "+String(RX));
 
   // Initialize SPIFFS
   if(!SPIFFS.begin(true)){
@@ -54,10 +53,22 @@ void setup() {
     request->send(SPIFFS, "/style.css", "text/css");
   });
 
+  // Route to increment temp
+  server.on("/tempup", HTTP_GET, [](AsyncWebServerRequest *request){
+    Serial2.write("TEMP UP\n");    
+    request->send(SPIFFS, "/index.html", String(), false, processor);
+  });
+  
+  // Route to decrement temp
+  server.on("/tempdown", HTTP_GET, [](AsyncWebServerRequest *request){
+    Serial2.write("TEMP DOWN\n");     
+    request->send(SPIFFS, "/index.html", String(), false, processor);
+  });
+
   // Start server
   server.begin();
 }
 
-void loop() { //Choose Serial1 or Serial2 as required
+void loop() {
 
 }

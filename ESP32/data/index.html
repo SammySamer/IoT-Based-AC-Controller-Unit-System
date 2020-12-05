@@ -7,10 +7,20 @@
   <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
-  <h1>ESP32 Web Server</h1>
-  <p>Current Temperature: <strong> %STATE%</strong></p>
-  <p>Set Temperature: <strong> 22°</strong></p>
-  <p><a href="/tempup"><button class="button">TEMP UP</button></a></p>
-  <p><a href="/tempdown"><button class="button button2">TEMP DOWN</button></a></p>
+	<h1>ESP32 Web Server</h1>
+	<p>Current Temperature: <strong> %STATE%</strong></p>
+	<p>Set Temperature: <strong> 22°</strong></p>
+	<form action="/get">
+		On/Off: <input type="text" name="input1">
+		<input type="submit" value="Submit">
+	</form><br>
+	<form action="/get">
+		Temperature: <input type="text" name="input2">
+		<input type="submit" value="Submit">
+	</form><br>
+	<form action="/get">
+		Fan Mode: <input type="text" name="input3">
+		<input type="submit" value="Submit">
+	</form>
 </body>
 </html>

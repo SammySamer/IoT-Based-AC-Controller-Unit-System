@@ -9,24 +9,41 @@
 <body>
 	<h1>ESP32 Web Server</h1>
 	<p>Current Temperature: <strong> %STATE%</strong></p>
-	<p>Set Temperature: <strong> 22°</strong></p>
+	<p>Set Temperature: <strong id="demo"> </strong></p>
 	<form action="/get">
-		On/Off: <input type="text" name="input1">
+		<input type="radio" name="input1" value="ON">
+		<label>On</label>
+		<input type="radio" name="input1" value="OFF">
+		<label>Off</label><br><br>
 		<input type="submit" value="Submit">
-	</form><br>
+	</form><br><br>
 	<form action="/get">
-		Temperature: <input type="text" name="input2">
+		Temperature: 
+		<div class="slidecontainer">
+  			<input type="range" min="18" max="30" class="slider" id="myRange" name="input2">
+		</div><br>
 		<input type="submit" value="Submit">
-	</form><br>
+	</form><br><br>
 	<form action="/get">
 		<label for="fanSpeed">Fan Speed:</label>
-		<select name="input3" id="cars" form="carform">
-		  <option value="AUTO">Auto</option>
-		  <option value="HIGH">High</option>
-		  <option value="MEDIUM">Medium</option>
-		  <option value="HIGH">Low</option>
-		</select>
+		<select name="input3">
+		  <option name="input3" value="AUTO">Auto</option>
+		  <option name="input3" value="HIGH">High</option>
+		  <option name="input3" value="MEDIUM">Medium</option>
+		  <option name="input3" value="LOW">Low</option>
+		</select><br><br>
 		<input type="submit" value="Submit">
 	</form>
 </body>
 </html>
+
+<script type="text/javascript">
+	var slider = document.getElementById("myRange");
+	var output = document.getElementById("demo");
+	output.innerHTML = slider.value; // Display the default slider value
+
+	// Update the current slider value (each time you drag the slider handle)
+	slider.oninput = function() {
+  	output.innerHTML = this.value;
+	}
+</script>

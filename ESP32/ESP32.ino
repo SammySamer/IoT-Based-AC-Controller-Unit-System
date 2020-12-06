@@ -21,15 +21,18 @@ AsyncWebServer server(80);
 
 String processor(const String& var){
   //Serial.println(var);
-  Serial2.flush();
-  return (Serial2.readString());
-  if(Serial2.readString() != "" && Serial2.readString().length() == 9)
+  //Serial2.flush();
+  //return (Serial2.readString());
+  String test = Serial2.readStringUntil('`');
+  if(test == "" || test == NULL)
   {
-    temp = Serial2.readString();
-    return (Serial2.readString());
+    return temp;
   }
   else
-    return temp;
+  {
+    temp = test;
+    return test;
+  }
 }
 
 void setup() {
@@ -71,23 +74,27 @@ void setup() {
     request->send(SPIFFS, "/index.html", String(), false, processor);
     String inputMessage;
     String inputParam;
-    char tempMsg[4];
+    char tempMsg[3];
     // GET input1 value on <ESP_IP>/get?input1=<inputMessage>
     if (request->hasParam(PARAM_INPUT_1)) {
       inputMessage = request->getParam(PARAM_INPUT_1)->value();
       inputParam = PARAM_INPUT_1;
-      inputMessage.toCharArray(tempMsg, 4);
+      inputMessage.toCharArray(tempMsg, sizeof(tempMsg));
       Serial2.write(tempMsg);
     }
     // GET input2 value on <ESP_IP>/get?input2=<inputMessage>
     else if (request->hasParam(PARAM_INPUT_2)) {
       inputMessage = request->getParam(PARAM_INPUT_2)->value();
       inputParam = PARAM_INPUT_2;
+      inputMessage.toCharArray(tempMsg, sizeof(tempMsg));
+      Serial2.write(tempMsg);
     }
     // GET input3 value on <ESP_IP>/get?input3=<inputMessage>
     else if (request->hasParam(PARAM_INPUT_3)) {
       inputMessage = request->getParam(PARAM_INPUT_3)->value();
       inputParam = PARAM_INPUT_3;
+      inputMessage.toCharArray(tempMsg, sizeof(tempMsg));
+      Serial2.write(tempMsg);
     }
     else {
       inputMessage = "No message sent";

@@ -46,6 +46,7 @@ UART_HandleTypeDef huart1;
 UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
+uint8_t UART_rxBuffer[4] = {0,0,'\r','\n'};
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -70,7 +71,7 @@ static void MX_USART1_UART_Init(void);
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-
+	
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -95,6 +96,7 @@ int main(void)
   MX_USART2_UART_Init();
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
+	__HAL_UART_ENABLE_IT(&huart2, UART_IT_RXNE);
     uint8_t ctrlBuffer[2];
     uint8_t temp[2];
     
@@ -122,10 +124,16 @@ int main(void)
         out[5] = ((int)(decTemp * 100) % 10) + '0';
         
         
-        HAL_UART_Transmit(&huart2, out, sizeof(out), 10);
-				HAL_Delay(10);
+        HAL_UART_Transmit(&huart1, out, sizeof(out), 10);
 				
-        HAL_Delay(250);
+				HAL_Delay(10);
+				//uint8_t UART_rxBuffer[6] = {0, 0,0, 0,'\r','\n'};
+				HAL_Delay(10);
+				HAL_UART_Receive(&huart2, UART_rxBuffer, sizeof(UART_rxBuffer), 301);
+				HAL_Delay(1);
+				HAL_UART_Transmit(&huart2, UART_rxBuffer, sizeof(UART_rxBuffer), 10);
+				HAL_Delay(1);
+        HAL_Delay(333);
     }
   /* USER CODE END 2 */
 

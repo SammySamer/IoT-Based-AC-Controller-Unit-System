@@ -45,8 +45,12 @@ I2C_HandleTypeDef hi2c1;
 UART_HandleTypeDef huart1;
 UART_HandleTypeDef huart2;
 
+volatile uint8_t UART_rxBuffer[7]; //= {0,0,'\r','\n'};
+volatile uint8_t UART_cmd[7];
+int flag_receive = 0;
+int i = 0;
 /* USER CODE BEGIN PV */
-uint8_t UART_rxBuffer[4] = {0,0,'\r','\n'};
+//volatile uint8_t UART_rxBuffer[4]; //= {0,0,'\r','\n'};
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -68,6 +72,12 @@ static void MX_USART1_UART_Init(void);
   * @brief  The application entry point.
   * @retval int
   */
+	
+//volatile uint8_t UART_rxBuffer[4]; //= {0,0,'\r','\n'};
+//volatile uint8_t UART_cmd[4];
+//int flag_receive = 0;
+//int i = 0;
+
 int main(void)
 {
   /* USER CODE BEGIN 1 */
@@ -96,7 +106,7 @@ int main(void)
   MX_USART2_UART_Init();
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
-	__HAL_UART_ENABLE_IT(&huart2, UART_IT_RXNE);
+	//__HAL_UART_DISABLE_IT(&huart2, UART_IT_RXNE);
     uint8_t ctrlBuffer[2];
     uint8_t temp[2];
     
@@ -106,8 +116,10 @@ int main(void)
     
     //the ` is basically the degree symbol
     uint8_t out[] = {'+', 0,0, '.', 0,0, '`','\r','\n'};
-    while (1){
-        
+		HAL_UART_Receive_IT(&huart2, (uint8_t*)& UART_rxBuffer, 1);
+    while (1)
+		{
+        HAL_Delay(10);
         HAL_I2C_Master_Transmit(&hi2c1, 0xD0, ctrlBuffer, 2, 10);
         HAL_I2C_Mem_Read(&hi2c1, 0xD1, 0x11, 1, temp, 2, 1000);
         int intTemp = temp[0];
@@ -127,13 +139,66 @@ int main(void)
         HAL_UART_Transmit(&huart1, out, sizeof(out), 10);
 				
 				HAL_Delay(10);
+				if (flag_receive == 1)
+				{
+					// do the action based on the command
+					// transmit here is for seeing what is in the cmd buffer on teraterm
+					HAL_UART_Transmit(&huart2, (uint8_t*)UART_cmd, sizeof(UART_cmd), 10);
+					
+					if (UART_cmd[0] == 'p')
+					{
+						// power options
+						if (UART_cmd[1] == 'N')
+						{
+							// power == ON
+						}
+						else if (UART_cmd[1] == 'F')
+						{
+							// power == OFF
+						}
+						
+					}
+					else if (UART_cmd[0] == 'f')
+					{
+						// fan options
+						if (UART_cmd[1] == 'A')
+						{
+							// fan == AUTO
+						}
+						else if (UART_cmd[1] == 'L')
+						{
+							// fan == LOW
+						}
+						else if (UART_cmd[1] == 'M')
+						{
+							// fan == MEDIUM
+						}
+						else if (UART_cmd[1] == 'H')
+						{
+							// fan == HIGH
+						}
+					}
+					else
+					{
+						// temp adjustment
+					}
+					
+					
+					
+					flag_receive = 0;
+				}
+				else
+				{
+					//HAL_UART_Transmit(&huart2, (uint8_t*)UART_cmd, sizeof(UART_cmd), 10);
+				}
+				
 				//uint8_t UART_rxBuffer[6] = {0, 0,0, 0,'\r','\n'};
-				HAL_Delay(10);
-				HAL_UART_Receive(&huart2, UART_rxBuffer, sizeof(UART_rxBuffer), 301);
-				HAL_Delay(1);
-				HAL_UART_Transmit(&huart2, UART_rxBuffer, sizeof(UART_rxBuffer), 10);
-				HAL_Delay(1);
-        HAL_Delay(333);
+//				HAL_Delay(10);
+//				HAL_UART_Receive(&huart2, UART_rxBuffer, sizeof(UART_rxBuffer), 301);
+//				HAL_Delay(1);
+//				HAL_UART_Transmit(&huart2, UART_rxBuffer, sizeof(UART_rxBuffer), 10);
+//				HAL_Delay(1);
+//        HAL_Delay(333);
     }
   /* USER CODE END 2 */
 
@@ -148,10 +213,56 @@ int main(void)
   /* USER CODE END 3 */
 }
 
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef* huart)
+{
+	
+  /* USER CODE BEGIN USART2_IRQn 0 */
+	if (huart->Instance == USART2)
+	{
+		if (UART_rxBuffer[0] == '\n')
+		{
+			UART_cmd[i] = '\0';
+			flag_receive = 1;
+			i=0;
+		}
+		else
+		{
+			UART_cmd[i++] = UART_rxBuffer[0];
+		}
+		HAL_UART_Receive_IT(&huart2, (uint8_t*) UART_rxBuffer,1);
+	}
+  /* USER CODE END USART2_IRQn 0 */
+  /* USER CODE BEGIN USART2_IRQn 1 */
+  /* USER CODE END USART2_IRQn 1 */
+}
+
+
 /**
   * @brief System Clock Configuration
   * @retval None
   */
+
+//void HAL_UART_RxCpltCallback(UART_HandleTypeDef* huart)
+//{
+//	
+//  /* USER CODE BEGIN USART2_IRQn 0 */
+//	if (huart->Instance == USART2)
+//	{
+//		if (UART_rxBuffer[0] == '\n')
+//		{
+//			UART_cmd[i] = '\0';
+//			flag_receive = 1;
+//			i=0;
+//		}
+//		else
+//		{
+//			UART_cmd[i++] = UART_rxBuffer[0];		
+//		}
+//		HAL_UART_Receive_IT(&huart2, (uint8_t*) UART_rxBuffer,1);
+//	}
+//}
+
+
 void SystemClock_Config(void)
 {
   RCC_OscInitTypeDef RCC_OscInitStruct = {0};

@@ -7,8 +7,8 @@
 #include <String>
 
 // Replace with your network credentials
-const char* ssid = "Drop it like it's hotspot";
-const char* password = "244466666";
+const char* ssid = "Villa 41";
+const char* password = "Coolbad_7";
 
 const char* PARAM_INPUT_1 = "input1";
 const char* PARAM_INPUT_2 = "input2";
@@ -74,33 +74,33 @@ void setup() {
     request->send(SPIFFS, "/index.html", String(), false, processor);
     String inputMessage;
     String inputParam;
-    char tempMsg[3];
+    char tempMsg[7];
     // GET input1 value on <ESP_IP>/get?input1=<inputMessage>
     if (request->hasParam(PARAM_INPUT_1)) {
       inputMessage = request->getParam(PARAM_INPUT_1)->value();
       inputParam = PARAM_INPUT_1;
-      inputMessage.toCharArray(tempMsg, sizeof(tempMsg));
-      Serial2.write(tempMsg);
+      inputMessage.toCharArray(tempMsg, 7);
+      Serial2.println(tempMsg);
     }
     // GET input2 value on <ESP_IP>/get?input2=<inputMessage>
     else if (request->hasParam(PARAM_INPUT_2)) {
       inputMessage = request->getParam(PARAM_INPUT_2)->value();
       inputParam = PARAM_INPUT_2;
-      inputMessage.toCharArray(tempMsg, sizeof(tempMsg));
-      Serial2.write(tempMsg);
+      inputMessage.toCharArray(tempMsg, 7);
+      Serial2.println(tempMsg);
     }
     // GET input3 value on <ESP_IP>/get?input3=<inputMessage>
     else if (request->hasParam(PARAM_INPUT_3)) {
       inputMessage = request->getParam(PARAM_INPUT_3)->value();
       inputParam = PARAM_INPUT_3;
-      inputMessage.toCharArray(tempMsg, sizeof(tempMsg));
-      Serial2.write(tempMsg);
+      inputMessage.toCharArray(tempMsg, 7);
+      Serial2.println(tempMsg);
     }
     else {
       inputMessage = "No message sent";
       inputParam = "none";
     }
-    Serial.println(inputMessage);
+    Serial.println(tempMsg);
     //request->send(200, "text/html", "HTTP GET request sent to your ESP on input field (" 
     //                                 + inputParam + ") with value: " + inputMessage +
     //                                 "<br><a href=\"/\">Return to Home Page</a>");

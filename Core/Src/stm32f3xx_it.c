@@ -42,6 +42,7 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN PV */
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -57,7 +58,6 @@
 /* External variables --------------------------------------------------------*/
 extern UART_HandleTypeDef huart2;
 /* USER CODE BEGIN EV */
-extern uint8_t UART_rxBuffer[6];
 /* USER CODE END EV */
 
 /******************************************************************************/
@@ -201,13 +201,7 @@ void SysTick_Handler(void)
   */
 void USART2_IRQHandler(void)
 {
-	
-  /* USER CODE BEGIN USART2_IRQn 0 */
-	HAL_Delay(10);
-  /* USER CODE END USART2_IRQn 0 */
   HAL_UART_IRQHandler(&huart2);
-  /* USER CODE BEGIN USART2_IRQn 1 */
-  /* USER CODE END USART2_IRQn 1 */
 }
 
 /* USER CODE BEGIN 1 */

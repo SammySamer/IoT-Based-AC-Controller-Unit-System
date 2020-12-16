@@ -148,16 +148,17 @@ int main(void)
 					if (UART_cmd[0] == 'p')
 					{
 						// power options
-						if (UART_cmd[1] == 'N')
+						if (UART_cmd[2] == 'N')
 						{
 							// power == ON
 						}
-						else if (UART_cmd[1] == 'F')
+						else if (UART_cmd[2] == 'F')
 						{
 							// power == OFF
 						}
 						
 					}
+					
 					else if (UART_cmd[0] == 'f')
 					{
 						// fan options
@@ -178,19 +179,19 @@ int main(void)
 							// fan == HIGH
 						}
 					}
-					else
+					
+					else if (UART_cmd[0] == 't')
 					{
 						// temp adjustment
 					}
 					
-					
+					else
+						;
 					
 					flag_receive = 0;
 				}
 				else
-				{
-					//HAL_UART_Transmit(&huart2, (uint8_t*)UART_cmd, sizeof(UART_cmd), 10);
-				}
+					;
 				
 				//uint8_t UART_rxBuffer[6] = {0, 0,0, 0,'\r','\n'};
 //				HAL_Delay(10);
@@ -241,26 +242,6 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef* huart)
   * @brief System Clock Configuration
   * @retval None
   */
-
-//void HAL_UART_RxCpltCallback(UART_HandleTypeDef* huart)
-//{
-//	
-//  /* USER CODE BEGIN USART2_IRQn 0 */
-//	if (huart->Instance == USART2)
-//	{
-//		if (UART_rxBuffer[0] == '\n')
-//		{
-//			UART_cmd[i] = '\0';
-//			flag_receive = 1;
-//			i=0;
-//		}
-//		else
-//		{
-//			UART_cmd[i++] = UART_rxBuffer[0];		
-//		}
-//		HAL_UART_Receive_IT(&huart2, (uint8_t*) UART_rxBuffer,1);
-//	}
-//}
 
 
 void SystemClock_Config(void)

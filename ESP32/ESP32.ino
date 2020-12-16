@@ -84,7 +84,7 @@ void setup() {
     }
     // GET input2 value on <ESP_IP>/get?input2=<inputMessage>
     else if (request->hasParam(PARAM_INPUT_2)) {
-      inputMessage = request->getParam(PARAM_INPUT_2)->value();
+      inputMessage = "t" + request->getParam(PARAM_INPUT_2)->value();
       inputParam = PARAM_INPUT_2;
       inputMessage.toCharArray(tempMsg, 7);
       Serial2.println(tempMsg);

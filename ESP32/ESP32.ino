@@ -7,8 +7,8 @@
 #include <String>
 
 // Replace with your network credentials
-const char* ssid = "Villa 41";
-const char* password = "Coolbad_7";
+const char* ssid = "Drop it like it's hotspot";
+const char* password = "244466666";
 
 const char* PARAM_INPUT_1 = "input1";
 const char* PARAM_INPUT_2 = "input2";

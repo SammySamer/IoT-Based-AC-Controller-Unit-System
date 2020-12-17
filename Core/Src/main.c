@@ -192,6 +192,7 @@ int main(void)
 				}
 				else
 					;
+				HAL_Delay(100);
 				
 				//uint8_t UART_rxBuffer[6] = {0, 0,0, 0,'\r','\n'};
 //				HAL_Delay(10);
